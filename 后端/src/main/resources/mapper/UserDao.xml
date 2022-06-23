@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqu.springboot.demo.dao.UserDao">
+
+    <resultMap type="com.cqu.springboot.demo.entity.User" id="UserMap">
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="authorityId" column="authority_id" jdbcType="INTEGER"/>
+        <result property="userAccount" column="user_account" jdbcType="VARCHAR"/>
+        <result property="userPassword" column="user_password" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserMap">
+        select
+          user_id, authority_id, user_account, user_password
+        from doc.user
+        where user_id = #{userId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserMap">
+        select
+          user_id, authority_id, user_account, user_password
+        from doc.user
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="UserMap">
+        select
+        user_id, authority_id, user_account, user_password
+        from doc.user
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="authorityId != null">
+                and authority_id = #{authorityId}
+            </if>
+            <if test="userAccount != null and userAccount != ''">
+                and user_account = #{userAccount}
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                and user_password = #{userPassword}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
+        insert into doc.user(authority_id, user_account, user_password)
+        values (#{authorityId}, #{userAccount}, #{userPassword})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into doc.user(authority_id, user_account, user_password)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.authorityId}, #{entity.userAccount}, #{entity.userPassword})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into doc.user(authority_id, user_account, user_password)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.authorityId}, #{entity.userAccount}, #{entity.userPassword})
+        </foreach>
+        on duplicate key update
+        authority_id = values(authority_id) , user_account = values(user_account) , user_password =
+        values(user_password)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update doc.user
+        <set>
+            <if test="authorityId != null">
+                authority_id = #{authorityId},
+            </if>
+            <if test="userAccount != null and userAccount != ''">
+                user_account = #{userAccount},
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                user_password = #{userPassword},
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from doc.user where user_id = #{userId}
+    </delete>
+
+    <!--用户扥估-->
+    <select id="loginUser" resultMap="UserMap">
+        select
+        user_id, authority_id, user_account, user_password
+        from doc.user
+        <where>
+            <if test="userAccount != null and userAccount != ''">
+                and user_account = #{userAccount}
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                and user_password = #{userPassword}
+            </if>
+        </where>
+    </select>
+
+    <!--查询用户总数量-->
+    <select id="getUserCount" resultType="java.lang.Long">
+        select count(1) from user
+    </select>
+
+    <!--查询渲染用户图表需要的数据-->
+    <select id="getUserEChartsData" resultType="com.cqu.springboot.demo.vo.UserEChartsVo">
+        SELECT authority.authority_name authorityName, COUNT(1) authorityCount FROM authority, USER
+        WHERE authority.authority_id = user.authority_id
+        GROUP BY authority.authority_id
+    </select>
+
+</mapper>
