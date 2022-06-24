@@ -26,7 +26,7 @@
 					    <i class="el-icon-s-comment"></i>
 					    <span slot="title">消息中心</span>
 					</el-menu-item>
-					<el-menu-item index="/visiter_mng/my_msg">
+					<el-menu-item index="/visiter_mng/my_msg/basemsg">
 					    <i class="el-icon-s-custom"></i>
 					    <span slot="title">我的</span>
 					</el-menu-item>

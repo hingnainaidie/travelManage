@@ -125,12 +125,12 @@ const routes = [
 				{
 				  path: 'sHotel_msg',
 				  name: 'sHotel_msg',
-				  component: () => import('../views/visiter/travel_msg/hotel_msg.vue'),
+				  component: () => import('../views/staff/sTravel_msg/sHotel_msg.vue'),
 				},
 				{
 				  path: 'sCar_msg',
 				  name: 'sCar_msg',
-				  component: () => import('../views/visiter/travel_msg/car_msg.vue'),
+				  component: () => import('../views/staff/sTravel_msg/sCar_msg.vue'),
 				},
 				{
 				  path: 'sVisiters',
@@ -227,17 +227,17 @@ const routes = [
   				{
   				  path: 'cScenic_area',
   				  name: 'cScenic_area',
-  				  component: () => import('../views/control/cScenic_area.vue'),
+  				  component: () => import('../views/staff/sTravel_msg/sScenic_area.vue'),
   				},
   				{
   				  path: 'cHotel_msg',
   				  name: 'cHotel_msg',
-  				  component: () => import('../views/visiter/travel_msg/hotel_msg.vue'),
+  				  component: () => import('../views/staff/sTravel_msg/sHotel_msg.vue'),
   				},
   				{
   				  path: 'cCar_msg',
   				  name: 'cCar_msg',
-  				  component: () => import('../views/visiter/travel_msg/car_msg.vue'),
+  				  component: () => import('../views/staff/sTravel_msg/sCar_msg.vue'),
   				},
   				{
   				  path: 'cVisiters',
@@ -263,11 +263,6 @@ const routes = [
   		  name: 'staff_manage',
   		  component: () => import('../views/control/staff_manage.vue'),
   		},
-		{
-		  path: 'staff_reg',
-		  name: 'staff_reg',
-		  component: () => import('../views/control/staff_reg.vue'),
-		},
   		{
   		  path: 'cInfo_manage',
   		  name: 'cInfo_manage',
@@ -295,6 +290,16 @@ const routes = [
 		  	  name: 'cInstruct',
 		  	  component: () => import('../views/control/cMsg_deliver/cInstruct.vue'),
 		  	},
+			{
+			  path: 'cInstructOld',
+			  name: 'cInstructOld',
+			  component: () => import('../views/control/cMsg_deliver/cInstructOld.vue'),
+			},
+			{
+			  path: 'dealEvent',
+			  name: 'dealEvent',
+			  component: () => import('../views/control/cMsg_deliver/dealEvent.vue'),
+			},
 		  	{
 		  	  path: 'cEmergency_dict',
 		  	  name: 'cEmergency_dict',

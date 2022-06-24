@@ -8,7 +8,7 @@
 		    <el-descriptions-item label="用户名">{{form.user_name}}</el-descriptions-item>
 		    <el-descriptions-item label="手机号">{{form.user_phone}}</el-descriptions-item>
 		    <el-descriptions-item label="身份">
-		      <el-tag size="small">游客</el-tag>
+		      <el-tag size="small">指挥中心</el-tag>
 		    </el-descriptions-item>
 		    <el-descriptions-item label="身份证号">{{form.user_identify}}</el-descriptions-item>
 			<el-descriptions-item label="性别">女</el-descriptions-item>
@@ -52,7 +52,7 @@
 
 <script>
 	export default {
-	  name: "basemsg",
+	  name: "cBasemsg",
 	  data(){
 	    return {
 			dialog1: false,

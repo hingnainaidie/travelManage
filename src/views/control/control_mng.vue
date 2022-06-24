@@ -26,7 +26,7 @@
 					    <i class="el-icon-s-comment"></i>
 					    <span slot="title">监控查看</span>
 					</el-menu-item>
-					<el-menu-item index="/control_mng/cMsg_deliver">
+					<el-menu-item index="/control_mng/cMsg_deliver/cInstruct">
 					    <i class="el-icon-s-comment"></i>
 					    <span slot="title">消息中心</span>
 					</el-menu-item>
@@ -34,7 +34,7 @@
 					    <i class="el-icon-s-comment"></i>
 					    <span slot="title">工作人员管理</span>
 					</el-menu-item>
-					<el-menu-item index="/control_mng/cMy_msg">
+					<el-menu-item index="/control_mng/cMy_msg/cBasemsg">
 					    <i class="el-icon-s-custom"></i>
 					    <span slot="title">我的</span>
 					</el-menu-item>

@@ -9,7 +9,7 @@
 			background-color="#545c64"
 		    text-color="#fff" 
 			active-text-color="#ffd04b"
-			style="height: 200vh;">
+			style="height: 90vh;">
 		      <el-menu-item index="/staff_mng/sTravel_msg/sScenic_area">
 		        <i class="el-icon-s-flag"></i>
 		        <span slot="title">景区信息</span>

@@ -7,36 +7,20 @@
         </div>
         <div>
           <el-form :model="form">
-			  <el-form-item>
-			    <el-input size="medium" v-model="form.username" placeholder="请输入姓名"></el-input>
-			  </el-form-item>
-			  <div style="margin-top: 8px;margin-bottom: 18px;margin-left: 10px;">
-				  请输入性别
-				  <el-radio v-model="form.usergender" label="男" style="margin-left: 50px;">男</el-radio>
-				  <el-radio v-model="form.usergender" label="女">女</el-radio>
-			  </div>
-			  <el-form-item>
-			    <el-input size="medium" v-model="form.useridentify" placeholder="请设置身份证号"></el-input>
-			  </el-form-item>
-			  <el-form-item>
-			    <el-input size="medium" v-model="form.userphone" placeholder="请输入手机号码"></el-input>
-			  </el-form-item>
             <el-form-item>
-              <el-input size="medium" v-model="form.useraccount" placeholder="请设置用户名"></el-input>
+              <el-input size="medium" v-model="form.username" placeholder="请设置用户名"></el-input>
             </el-form-item>
 			<el-form-item>
-			  <el-input size="medium" v-model="form.userphone" placeholder="请输入手机号码"></el-input>
+			  <el-input size="medium" v-model="form.phone" placeholder="请输入手机号码"></el-input>
 			</el-form-item>
             <el-form-item>
-              <el-input size="medium" type="password" v-model="form.userpwd" placeholder="请设置登录密码"></el-input>
+              <el-input size="medium" type="password" v-model="form.pwd" placeholder="请设置登录密码"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-input size="medium" type="password" v-model="form.userrepwd" placeholder="请再次输入登录密码"></el-input>
+              <el-input size="medium" type="password" v-model="form.repwd" placeholder="请再次输入登录密码"></el-input>
             </el-form-item>
             <el-form-item>
-				<div style="text-align: center;">
-					<el-button type="primary" @click="submsg()" size="medium" class="w-100">同意并注册</el-button>
-				</div>  
+              <el-button type="primary" @click="submsg()" size="medium" class="w-100">同意并注册</el-button>
             </el-form-item>
             <el-form-item>
               <el-checkbox v-model="checked"></el-checkbox>
@@ -55,15 +39,11 @@
     data() {
       return {
         form: {
-			
           username: '',
-		  usergender: '',
-		  useridentify: '',
-		  userphone: '',
-          useraccount:'',
-          userpwd: '',
-          userrepwd: '',
-          
+          usernum:'',
+          pwd: '',
+          repwd: '',
+          phone: ''
         },
         checked: false
       };

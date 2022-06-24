@@ -20,7 +20,7 @@
 			  </el-menu-item>
 			  <el-menu-item index="/control_mng/cMsg_deliver/cEmergency_msg">
 			    <i class="el-icon-warning"></i>
-			    <span slot="title">预警消息发布</span>
+			    <span slot="title">预警消息列表</span>
 			  </el-menu-item>
 		    </el-menu>	
 		  </el-aside>
