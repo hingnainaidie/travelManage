@@ -98,6 +98,16 @@ const routes = [
 				  name: 'my_case',
 				  component: () => import('../views/visiter/my_msg/my_case.vue'),
 				},
+				{
+					path: 'new_complain',
+					name: 'new_complain',
+					component: () => import('../views/visiter/my_msg/new_complain.vue'),
+				  },
+				  {
+					path: 'new_case',
+					name: 'new_case',
+					component: () => import('../views/visiter/my_msg/new_case.vue'),
+				  }
 			]
 		}
 	]
