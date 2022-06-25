@@ -1,6 +1,8 @@
 <template>
 	<div style="height: 50vh;">
-		
+		<div>
+			<el-button @click="returnPage" style="margin-bottom: 20px;">返回</el-button>
+		</div>
 		<div>
 			<el-descriptions direction="vertical" :column="6" border>
 			  <el-descriptions-item label="名称">{{scenicname}}</el-descriptions-item>
@@ -123,12 +125,13 @@
 </template>
 
 <script>
-	
 	import * as echarts from 'echarts'
 	export default {
-		name: 'sScenic_area',
+		name: 'cScenic_area2',
 		data(){
 			return{
+				getScenicname: '',  //接收上一页面的传参
+				
 				belongscenicinfo: [],
 				scenicid: '',//接收页面跳转的该值班人员对应的景区id
 				scenicname:'磁器口',
@@ -167,7 +170,19 @@
 				typyid:0,//周：0，月：1，年：2
 			}
 		},
+		watch: {
+		    '$route': 'gettingData'
+		  },
 		methods:{
+			//从之前的界面获取数据
+			gettingData(){
+				this.getScenicname = this.$route.params.name;
+				console.log("新页面：",this.getScenicname);
+			},
+			//返回上一页
+			returnPage(){
+				 this.$router.push({name:'cScenic_area'})
+			},
 			//获取值班人员对应景区的信息
 			initScenicInfo(){
 				this.sceniccomfor = (this.sceniccurrnum/this.sceniccapacity)*100;
@@ -239,6 +254,9 @@
 					}];
 				},
 		},
+		created() {
+		    this.gettingData()
+		  },
 		mounted() {
 			this.$nextTick(() => {
 				//页面初始化的时候执行

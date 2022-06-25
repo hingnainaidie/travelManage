@@ -227,8 +227,14 @@ const routes = [
   				{
   				  path: 'cScenic_area',
   				  name: 'cScenic_area',
-  				  component: () => import('../views/staff/sTravel_msg/sScenic_area.vue'),
+  				  component: () => import('../views/control/cScenic_area.vue'),
   				},
+				{
+				  
+				  path: 'cScenic_area2',
+				  name: 'cScenic_area2',
+				  component: () => import('../views/control/cScenic_area2.vue'),
+				}, 
   				{
   				  path: 'cHotel_msg',
   				  name: 'cHotel_msg',
