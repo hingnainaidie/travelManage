@@ -1,5 +1,8 @@
 <template>
 	<div>
+		<div class="my_complain">
+			<h2>我的投诉</h2>
+		</div>
 		<el-row>
 		  <el-button type="primary" @click="newComplain()">新建</el-button>
 		</el-row>
@@ -11,14 +14,14 @@
 		        label="投诉编号"
 		        width="180">
 		      </el-table-column>
+			  <el-table-column
+			    prop="description"
+			    label="投诉事件描述">
+			  </el-table-column>
 		      <el-table-column
 		        prop="complaint_status"
 		        label="投诉处理状态"
 		        width="180">
-		      </el-table-column>
-		      <el-table-column
-		        prop="description"
-		        label="投诉事件描述">
 		      </el-table-column>
 			 <el-table-column>
 			 	<el-link :underline="false" @click="check_complain()">查看详情<i class="el-icon-view el-icon--right"></i> </el-link>
@@ -61,4 +64,12 @@
 		    }
 </script>
 <style>
+	.my_complain{
+		text-align: center;
+		margin: auto;
+		min-width: 1000px;
+	}
+	h2{
+		color: gray;
+	}
 </style>
