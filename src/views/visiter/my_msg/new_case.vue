@@ -5,9 +5,9 @@
 		  </el-page-header>
 		</el-row>
 		<el-main>
-			报案事件地点
+			<h3>报案事件地点</h3>
 			<el-input id="input1" type="input" placeholder="请输入报案事件地点" v-model="form.place" :rows="1" show-word-limit style=" 100%"></el-input>
-		  报案事件描述
+		  <h3>报案事件描述</h3>
 		  <el-input id="input1" type="textarea" placeholder="请输入报案事件描述" v-model="form.description" :rows="10" maxlength="300" show-word-limit style=" 100%"></el-input>
 		</el-main>
 		<el-row type="flex" class="row-bg" justify="center">
