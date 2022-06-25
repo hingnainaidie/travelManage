@@ -107,7 +107,17 @@ const routes = [
 					path: 'new_case',
 					name: 'new_case',
 					component: () => import('../views/visiter/my_msg/new_case.vue'),
-				  }
+				  },
+				  {
+					  path: 'check_complain',
+					  name: 'check_complain',
+					  component: () => import('../views/visiter/my_msg/check_complain.vue'),
+					},
+					{
+					  path: 'check_case',
+					  name: 'check_case',
+					  component: () => import('../views/visiter/my_msg/check_case.vue'),
+					}
 			]
 		}
 	]
