@@ -28,7 +28,7 @@
 			  </el-menu-item>
 		    </el-menu>	
 		  </el-aside>
-		  <el-main class="main">
+		  <el-main class="main"  style="height: 90vh">
 			  <router-view/>
 		  </el-main>
 		</el-container>
@@ -40,12 +40,14 @@
 	  name: 'sTravel_msg',
 	  data(){
 	    return{
+			
 	    }
 	  },
 	  methods: {
 	    handleSelect(key) {
 	      this.$router.push({
-	        path: key
+	        path: key,
+			
 	      })
 	    }
 	  }
@@ -53,4 +55,8 @@
 </script>
 
 <style>
+	.block{
+		margin-top: 1.5%;
+		text-align: center;
+	}
 </style>

@@ -14,10 +14,7 @@
 			    <i class="el-icon-video-camera-solid"></i>
 			    <span slot="title">景区监控信息</span>
 			  </el-menu-item>
-			  <el-menu-item index="/control_mng/cInfo_manage/cPolice_info">
-			    <i class="el-icon-s-check"></i>
-			    <span slot="title">公安监控信息</span>
-			  </el-menu-item>
+			  
 		    </el-menu>	
 		  </el-aside>
 		  <el-main class="main">
@@ -32,12 +29,14 @@
 	  name: 'cInfo_manage',
 	  data(){
 	    return{
+			
 	    }
 	  },
 	  methods: {
 	    handleSelect(key) {
 	      this.$router.push({
-	        path: key
+	        path: key,
+			
 	      })
 	    }
 	  }

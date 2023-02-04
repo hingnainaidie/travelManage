@@ -24,7 +24,7 @@
 			  </el-menu-item>
 		    </el-menu>	
 		  </el-aside>
-		  <el-main class="main">
+		  <el-main class="main" style="height: 90vh;">
 			  <router-view/>
 		  </el-main>
 		</el-container>
@@ -36,12 +36,14 @@
 	  name: 'travel_msg',
 	  data(){
 	    return{
+			userInfo: localStorage.getItem('userInfo'),
 	    }
 	  },
 	  methods: {
 	    handleSelect(key) {
 	      this.$router.push({
-	        path: key
+	        path: key,
+			
 	      })
 	    }
 	  }

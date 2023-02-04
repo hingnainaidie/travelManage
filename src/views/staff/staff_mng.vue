@@ -18,19 +18,19 @@
 					    <i class="el-icon-menu"></i>
 					    <span slot="title">首页</span>
 					</el-menu-item>
-				    <el-menu-item index="/staff_mng/sTravel_msg">
+				    <el-menu-item index="/staff_mng/sTravel_msg/sScenic_area">
 				        <i class="el-icon-s-promotion"></i>
 				        <span slot="title">旅游信息查询</span>
 				    </el-menu-item>
-					<el-menu-item index="/staff_mng/info_manage">
+					<el-menu-item index="/staff_mng/info_manage/scenic_info">
 					    <i class="el-icon-s-comment"></i>
 					    <span slot="title">监控查看</span>
 					</el-menu-item>
-					<el-menu-item index="/staff_mng/events_solve">
+					<el-menu-item index="/staff_mng/events_solve/complain_solve">
 					    <i class="el-icon-s-comment"></i>
 					    <span slot="title">投诉报案处理</span>
 					</el-menu-item>
-					<el-menu-item index="/staff_mng/msg_deliver">
+					<el-menu-item index="/staff_mng/msg_deliver/sCase_manage">
 					    <i class="el-icon-s-comment"></i>
 					    <span slot="title">消息中心</span>
 					</el-menu-item>
@@ -41,18 +41,7 @@
 				</el-menu>
 			  </div>
 			  <div class="user">
-			    <el-dropdown @command="handleCommand" v-if='myUser'>
-			      <span class="el-dropdown-link">
-			        登录<i class="el-icon-arrow-down el-icon--right"></i>
-			      </span>
-			      <el-dropdown-menu slot="dropdown">
-			        <el-dropdown-item command="basemsg">我的基本信息</el-dropdown-item>
-			        <el-dropdown-item command="changemsg">修改基本信息</el-dropdown-item>
-			        <el-dropdown-item command="changepwd">修改密码</el-dropdown-item>
-			        <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
-			      </el-dropdown-menu>
-			    </el-dropdown>
-			    <div class='el-dropdown-link' @click='login()' v-if='noUser'>登录</div>
+			    <div @click='login()' >{{userName}}</div>
 			  </div>
 			</div>
 		</el-header>
@@ -68,21 +57,31 @@
     name: 'staff_mng',
     data() {
       return {
-		  noUser:true,
-		  myUser:false
+		  userName:""
       }
     },
 	methods: {
 	  handleSelect(key) {
 	    this.$router.push({
-	      path: key
+	      path: key,
+		  
 	    })
 	  },
 	  login(){
-		  this.$router.push({
-		    path: "/login"
-		  })
+		  if(window.localStorage.userId!=0){
+		  }else{
+		  	this.$router.push({
+		  	  path: "/login"
+		  	})
+		  }
 	  }
+	},
+	mounted() {
+		if(window.localStorage.userId!=0){
+			this.userName=window.localStorage.userName;
+		}else{
+			this.userName="登录";
+		}
 	}
   }
 </script>
@@ -114,18 +113,10 @@
 	  height: 70px;
   }
   .user {
+	  color:#fff;
     line-height: 60px;
     float: right;
     margin-right: 20px;
   }
 
-  .el-dropdown-link {
-    font-size: 20px;
-    cursor: pointer;
-    color: white;
-  }
-
-  .el-icon-arrow-down {
-    font-size: 12px;
-  }
 </style>

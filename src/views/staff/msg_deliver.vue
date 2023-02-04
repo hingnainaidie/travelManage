@@ -24,7 +24,7 @@
 			  </el-menu-item>
 		    </el-menu>	
 		  </el-aside>
-		  <el-main class="main">
+		  <el-main class="main" >
 			  <router-view/>
 		  </el-main>
 		</el-container>
@@ -36,12 +36,14 @@
 	  name: 'msg_deliver',
 	  data(){
 	    return{
+			userInfo: localStorage.getItem('userInfo'),
 	    }
 	  },
 	  methods: {
 	    handleSelect(key) {
 	      this.$router.push({
-	        path: key
+	        path: key,
+			query:{data:this.userInfo}
 	      })
 	    }
 	  }

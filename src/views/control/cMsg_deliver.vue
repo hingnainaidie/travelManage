@@ -13,6 +13,7 @@
 		      <el-menu-item index="/control_mng/cMsg_deliver/cInstruct">
 		        <i class="el-icon-s-fold"></i>
 		        <span slot="title">旅游事件管理</span>
+				<el-badge :value="tableSize" class="item" :max="99" v-if="noZero"></el-badge>
 		      </el-menu-item>
 			  <el-menu-item index="/control_mng/cMsg_deliver/cEmergency_dict">
 			    <i class="el-icon-s-order"></i>
@@ -36,14 +37,25 @@
 	  name: 'cMsg_deliver',
 	  data(){
 	    return{
+			tableSize:0,
+			noZero:false,
 	    }
 	  },
 	  methods: {
 	    handleSelect(key) {
 	      this.$router.push({
-	        path: key
+	        path: key,
+			
 	      })
 	    }
+	  },
+	  mounted() {
+	  	this.instance.getUnTEs().then(res => {
+	  		 this.tableSize=res.data.datas.length;
+			 if(this.tableSize!=0){
+				 this.noZero=true;
+			 }
+	  	 })
 	  }
 	}
 </script>

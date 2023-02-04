@@ -28,12 +28,14 @@
 	  name: 'sMy_msg',
 	  data(){
 	    return{
+			userInfo: localStorage.getItem('userInfo'),
 	    }
 	  },
 	  methods: {
 	    handleSelect(key) {
 	      this.$router.push({
-	        path: key
+	        path: key,
+			query:{data:this.userInfo}
 	      })
 	    }
 	  }

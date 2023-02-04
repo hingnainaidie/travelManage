@@ -28,12 +28,14 @@
 	  name: 'sMy_msg',
 	  data(){
 	    return{
+			
 	    }
 	  },
 	  methods: {
 	    handleSelect(key) {
 	      this.$router.push({
-	        path: key
+	        path: key,
+			
 	      })
 	    }
 	  }

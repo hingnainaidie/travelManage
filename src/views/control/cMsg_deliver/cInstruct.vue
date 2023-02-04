@@ -6,16 +6,16 @@
 		</div>
 		<div>
 		  <el-table border :data='tripEventList' style='width: 100%; padding: auto;'>
-		    <el-table-column prop='emergencytrip_event_time' label='事件上传时间' width="200"></el-table-column>
-		    <el-table-column prop='trip_event_title' label='事件名称' min-width="350"></el-table-column>
-		    <el-table-column prop='trip_event_classification' label='事件类别'>
+		    <el-table-column prop='tripEventTime' label='事件上传时间' width="200"></el-table-column>
+		    <el-table-column prop='tripEventTitle' label='事件名称' min-width="350"></el-table-column>
+		    <el-table-column prop='tripEventClassification' label='事件类别'>
 		    	<template slot-scope="scope">
-		    		<el-tag>{{scope.row.trip_event_classification}}</el-tag>
+		    		<el-tag>{{scope.row.tripEventClassification}}</el-tag>
 		    	</template>
 		    </el-table-column>
 		    <el-table-column label='操作' width="120">
 		      <template slot-scope='scope'>
-		        <el-button size="mini" type="warning" @click='deal(scope.row)'>点击处理</el-button>
+		        <el-button size="mini" type="warning" @click='deal(scope.row.tripEventId)'>点击处理</el-button>
 		      </template>
 		    </el-table-column>
 		  </el-table>
@@ -28,28 +28,7 @@
 	  name: "basemsg",
 	  data(){
 	    return {
-			tripEventList:[
-				{
-					emergencytrip_event_time:"2022-6-23 12:00:19",
-					trip_event_title:"重庆某景区xxxx发生重大坍塌事件",
-					trip_event_classification:"类别1"
-				},
-				{
-					emergencytrip_event_time:"2022-6-23 12:00:19",
-					trip_event_title:"重庆某景区xxxx发生重大坍塌事件",
-					trip_event_classification:"类别1"
-				},
-				{
-					emergencytrip_event_time:"2022-6-23 12:00:19",
-					trip_event_title:"重庆某景区xxxx发生重大坍塌事件",
-					trip_event_classification:"类别1"
-				},
-				{
-					emergencytrip_event_time:"2022-6-23 12:00:19",
-					trip_event_title:"重庆某景区xxxx发生重大坍塌事件",
-					trip_event_classification:"类别1"
-				}
-			]
+			tripEventList:[]
 	    }
 	  },
 	  methods:{
@@ -58,11 +37,17 @@
 			    path: "/control_mng/cMsg_deliver/cInstructOld"
 			  })
 		  },
-		  deal(){
+		  deal(data){
 			  this.$router.push({
-			    path: "/control_mng/cMsg_deliver/dealEvent"
+			    path: "/control_mng/cMsg_deliver/dealEvent",
+				query:{data:data}
 			  })
 		  }
+	  },
+	  mounted() {
+	  	this.instance.getUnTEs().then(res => {
+	  		 this.tripEventList=res.data.datas;
+	  	 })
 	  }
 	}
 </script>

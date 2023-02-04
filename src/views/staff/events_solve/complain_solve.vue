@@ -4,65 +4,76 @@
 			<h2>投诉管理</h2>
 		</div>
 		<div>
-		 <el-row class="new_complain">
-		  <el-button type="primary" @click="newComplain()">新建</el-button>
-		 </el-row>
-		</div>
-		<div>
 			<el-table border :data='complainList' style='width: 100%; padding: auto;'>
-				<el-table-column prop='complaint_id' label='投诉编号' width="200"></el-table-column>
-				<el-table-column prop='description' label='投诉事件描述' min-width="270"></el-table-column>
-				<el-table-column prop='complaint_status' label='投诉处理状态' :filters="status"
+				<el-table-column prop='complaintId' label='投诉编号' width="200"></el-table-column>
+				<el-table-column prop='complaintDescription' label='投诉事件描述' min-width="270"></el-table-column>
+				<el-table-column prop='complaintStatus' label='投诉处理状态' :filters="status"
 					:filter-method="filterHandle" width="120">
 					<template slot-scope="scope">
 						<el-tag
-						:type="color(scope.row.complaint_status)">{{sta(scope.row.complaint_status)}}</el-tag>
+						:type="color(scope.row.complaintStatus)">{{sta(scope.row.complaintStatus)}}</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column>
-					<el-link :underline="false" @click="check_complain()">查看详情<i class="el-icon-view el-icon--right"></i> </el-link>
-				</el-table-column>
+				<!-- <el-table-column prop='StatusName' label='投诉处理状态'  width="120">
+				</el-table-column> -->
+					<el-table-column>
+						<template slot-scope="scope">
+							<el-link :underline="false" @click="check_complain(scope.row)">查看详情<i class="el-icon-view el-icon--right"></i> </el-link>
+						</template>
+					</el-table-column>
 			</el-table>
 		</div>
 	</div>
 </template>
 <script>
+	import {getAllComEvents} from '@/api/index.js';
 		    export default {
 				name:'complain_solve',
 		      data() {
 		        return {
 					status: [{
 						text: '未处理',
-						value: 0
-						},
-						{
-							text: '处理中',
-							value: 1
+						value: "0"
 						},
 						{
 							text: '已处理',
-							value: 2
+							value: "2"
 						}
 						],
-						complainList: [{
-							complaint_id: 'co000001',
-							description: 'xxx',
-							complaint_status: 2
-						}, {
-							complaint_id: 'co000002',
-							description: 'xxx',
-							complaint_status: 1
-						}, {
-							complaint_id: 'co000003',
-							description: 'xxx',
-							complaint_status: 0
-						}]					
+						complainList: []
 		        }
 		      },
 			  methods: {
-				check_complain(){
+				  initComplainList(){
+					  getAllComEvents().then((res) => {
+					if(res != -1){
+						this.complainList = res.data.datas;
+						//两层循环修改数据
+						this.complainList.forEach((item)=>{
+							console.log(item.complaintStatus);
+							this.status.forEach((itemin)=>{
+								if(item.complaintStatus==itemin.value){
+									item.StatusName=itemin.text;
+									return true;
+								}
+							})
+						})
+						console.log(this.complainList);
+						console.log(this.complainList.complaintStatus);
+						if(this.complainList.complaintStatus=="1"){
+							console.log("已处理");
+						}
+					}
+					
+				})
+
+				  },
+				check_complain(row){
 				  this.$router.push({
-				    path: "/staff_mng/events_solve/check_complain"
+				    path: "/staff_mng/events_solve/check_complain",
+					query: {
+					          complaintId: row.complaintId
+					}// 要传递的参数
 				  })
 				},
 				sta(data) {
@@ -84,9 +95,17 @@
 					}
 				},
 				filterHandle(value, row, column) {
+					console.log(value);
 					const property = column['property'];
+					console.log(row[property]);
 					return row[property] === value;
 				}
+			  },
+			  mounted() {
+			  	this.$nextTick(() => {
+			  		  		//页面初始化的时候执行
+			  		  		this.initComplainList();
+			  		  	})
 			  }
 		    }
 </script>

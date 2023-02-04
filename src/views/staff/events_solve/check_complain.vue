@@ -42,37 +42,92 @@
 				</el-descriptions-item>
 			  </el-descriptions>
 		</el-main>
+		<!-- <template slot-scope="scope"> -->
 		<el-row type="flex" class="row-bg" justify="end">
-			<el-button type="primary" @click="submitMethod()">提交处理方案</el-button>
+				<el-button type="primary" @click="submitMethod()" :disabled="comUse">提交处理方案</el-button>
 		</el-row>
+		<!-- </template> -->
 	</div>
 </template>
 
 <script>
+	import {checkComEvent} from '@/api/index.js';
 	export default {
         name:'check_complain',
 		data() {
 		  return {
-		    complaint_id: 'co000002',
-			description: 'xxx',
-			complaint_start_time:'2022/05/22',
-			complaint_end_time:'-',
-		    complaint_status: '处理中',
-			complaint_result:'-'
+			complaintId:'',
+		    complaint_id: '',
+			description: '',
+			complaint_start_time:'',
+			complaint_end_time:'',
+		    complaint_status: '',
+			complaint_result:'',
+			complaintInfo:[]
 		  }
 		},
+		watch: {
+		    '$route': 'gettingData'
+		  },
+		  computed: {
+		      comUse() {
+		        if(this.complaint_status=="已处理"){
+					return  true;
+				}
+				return false;
+		      },
+		    },
+		  created() {
+		    this.gettingData()
+		  },
 	  methods: {
+		  // 获取数据
+		      gettingData() {
+		        var querycomplaintId = this.$route.query.complaintId
+		        this.complaintId = querycomplaintId
+		      },
+			  initCheckComplaint(){
+			  	  checkComEvent({complaintId:this.complaintId}).then((res) => {
+			  				this.complaintInfo=res.data.datas;
+			  				console.log(this.complaintInfo);
+			  				this.complaint_id=res.data.datas.complaintId;
+			  				this.description=res.data.datas.complaintDescription;
+			  				this.complaint_start_time=res.data.datas.complaintBegintime;
+			  				this.complaint_end_time=res.data.datas.complaintEndtime;
+			  				this.complaint_status=res.data.datas.complaintStatus;
+			  				this.complaint_result=res.data.datas.complaintResult;
+							if(this.complaint_status==2){
+								this.complaint_status='已处理';
+							}else{
+								if(this.complaint_status==1){
+									this.complaint_status='处理中';
+								}else{
+									this.complaint_status='未处理';
+								}
+							}
+			  			})
+			    },
 		goBack() {
 		        console.log('go back');
 				this.$router.push({
 				  path: "/staff_mng/events_solve/complain_solve"
 				})
 		      },
-		submitMethod(){
+		submitMethod(row){
 			this.$router.push({
-			  path: "/staff_mng/events_solve/submit_complain_method"
+			  path: "/staff_mng/events_solve/submit_complain_method",
+			  query: {
+			            complaintId: this.complaintId
+			  }// 要传递的参数
 			})
 		}
+	  },
+	  mounted() {
+	  	this.$nextTick(() => {
+	  			console.log(this.complaintId);
+	  		//页面初始化的时候执行
+	  		this.initCheckComplaint();	
+	  	})
 	  }
 	}
 </script>

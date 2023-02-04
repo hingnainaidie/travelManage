@@ -4,19 +4,20 @@
 				class="el-icon-arrow-left"></i>返回</el-button>
 		<h2>已处理历史事件列表</h2>
 		<div>
-			<el-table border :data='tripEventList' style='width: 100%; padding: auto;'>
-				<el-table-column prop='emergencytrip_event_time' label='事件上传时间' width="200"></el-table-column>
-				<el-table-column prop='trip_event_title' label='事件名称' min-width="350"></el-table-column>
-				<el-table-column prop='trip_event_classification' label='事件类别'>
+			<el-table border :data='tripEventList' style='width: 100%; padding: auto;'v-loading="loading" element-loading-text="拼命加载中"
+				element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+				<el-table-column prop='tripEventTime' label='事件上传时间' width="200" align="center"></el-table-column>
+				<el-table-column prop='tripEventTitle' label='事件名称' min-width="350" align="center"></el-table-column>
+				<el-table-column prop='tripEventClassification' label='事件类别' align="center" width="150">
 					<template slot-scope="scope">
-						<el-tag>{{scope.row.trip_event_classification}}</el-tag>
+						<el-tag>{{scope.row.tripEventClassification}}</el-tag>
 					</template>
 				</el-table-column>
 
 				<el-table-column label='操作' width="220" align="center">
 					<template slot-scope='scope'>
-						<el-button size="mini" type="warning" @click='detail(scope.$index, scope.row)'>详情</el-button>
-						<el-button size="mini" type="danger" @click="tripEventDelete(scope.$index, scope.row)">删除</el-button>
+						<el-button size="mini" type="warning" @click='detail(scope.row.tripEventId)'>详情</el-button>
+						<el-button size="mini" type="danger" @click="tripEventDelete(scope.row.tripEventId)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -26,16 +27,16 @@
 		<el-dialog title="已处理旅游事件详情" :visible.sync="isShow" :center='true' width="800px">
 			<div>
 				<el-descriptions class="margin-top" :column="1">
-					<el-descriptions-item label="旅游事件时间">{{tripEventDetail.trip_event_time}}</el-descriptions-item>
-					<el-descriptions-item label="旅游事件名称">{{tripEventDetail.trip_event_title}}</el-descriptions-item>
-					<el-descriptions-item label="旅游事件发生地点">{{tripEventDetail.trip_event_location}}</el-descriptions-item>
+					<el-descriptions-item label="旅游事件时间">{{tripEventDetail.tripEventTime}}</el-descriptions-item>
+					<el-descriptions-item label="旅游事件名称">{{tripEventDetail.tripEventTitle}}</el-descriptions-item>
+					<el-descriptions-item label="旅游事件发生地点">{{tripEventDetail.tripEventLocation}}</el-descriptions-item>
 					<el-descriptions-item label="旅游事件类别">
-						<el-tag size="small">{{tripEventDetail.trip_event_classification}}</el-tag>
+						<el-tag size="small">{{tripEventDetail.tripEventClassification}}</el-tag>
 					</el-descriptions-item>
-					<el-descriptions-item label="上报人名字">{{tripEventDetail.user_name}}</el-descriptions-item>
-					<el-descriptions-item label="旅游事件描述">{{tripEventDetail.trip_event_description}}</el-descriptions-item>
-					<el-descriptions-item label="预警信息内容">{{tripEventDetail.staff_warning_information}}</el-descriptions-item>
-					<el-descriptions-item label="诱导与指令信息">{{tripEventDetail.guidance_instruction_info}} </el-descriptions-item>
+					<el-descriptions-item label="上报人名字">{{tripEventDetail.userName}}</el-descriptions-item>
+					<el-descriptions-item label="旅游事件描述">{{tripEventDetail.tripEventDescription}}</el-descriptions-item>
+					<el-descriptions-item label="预警信息内容">{{tripEventDetail.staffWarningInformation}}</el-descriptions-item>
+					<el-descriptions-item label="诱导与指令信息">{{tripEventDetail.guidanceInstructionInfo}} </el-descriptions-item>
 				</el-descriptions>
 
 			</div>
@@ -47,62 +48,67 @@
 	</template>
 
 	<script>
+		import{getChTEs,getDetailChecked,deleteTripEvent} from '@/api/index.js';
 		export default {
 			name: "cInstructOld",
 			data() {
 				return {
-					tripEventList: [{
-							emergencytrip_event_time: "2022-6-23 12:00:19",
-							trip_event_title: "重庆某景区xxxx发生重大坍塌事件",
-							trip_event_classification: "类别1"
-						},
-						{
-							emergencytrip_event_time: "2022-6-23 12:00:19",
-							trip_event_title: "重庆某景区xxxx发生重大坍塌事件",
-							trip_event_classification: "类别2"
-						},
-						{
-							emergencytrip_event_time: "2022-6-23 12:00:19",
-							trip_event_title: "重庆某景区xxxx发生重大坍塌事件",
-							trip_event_classification: "类别1"
-						},
-						{
-							emergencytrip_event_time: "2022-6-23 12:00:19",
-							trip_event_title: "重庆某景区xxxx发生重大坍塌事件",
-							trip_event_classification: "类别1"
-						}
-					],
+					tripEventList: [],
+					loading:false,
 					isShow: false,
-					tripEventDetail: {
-						trip_event_time: '2020',
-						trip_event_title: 'title1',
-						trip_event_location: 'location',
-						trip_event_classification: 'type',
-						user_name: 'zww',
-						trip_event_description: 'description',
-						staff_warning_information: 'information',
-						guidance_instruction_info: 'instruction'
-					},
+					tripEventDetail: {}, //旅游处理事件详情查看
 
 				}
 			},
 			methods: {
+				//初始化页面
+				initHistory(){
+					this.loading=true;
+					//获取所有历史已处理旅游事件
+					this.instance.getChTEs().then(res=>{
+						this.tripEventList=res.data.datas;
+						//设置遮罩时间
+						setTimeout(() => {
+							this.loading = false;
+						}, 50)
+					})
+				},
 				//返回父页面
 				returnButton() {
 					this.$router.push({name:"cInstruct"});
 				},
 				//查看事件详情
-				detail(index,item) {
+				detail(item) {
 					this.isShow = true;
-					console.log(index);
+					this.instance.getDetailChecked({
+						tripEventId:item
+					}).then(res=>{
+						console.log("这是详情查看");
+						console.log(res.data);
+						this.tripEventDetail=res.data.datas;
+					})
 					
 				},
 				
 				//已处理历史事件的删除
-				tripEventDelete(index,item){
-					console.log(index);
-					console.log(item);
+				tripEventDelete(item){
+					this.instance.deleteTripEvent({
+						tripEventId:item
+					}).then(res=>{
+						this.$message({
+						  message: "成功删除预案！",
+						  type:'success',
+						  duration:500,
+						  center:true
+						});
+						this.initHistory();
+					})
 				}
+			},
+			mounted(){
+				this.$nextTick(()=>{
+					this.initHistory();
+				})
 			}
 		}
 	</script>

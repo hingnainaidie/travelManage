@@ -9,7 +9,7 @@
 			background-color="#545c64"
 		    text-color="#fff" 
 			active-text-color="#ffd04b"
-			style="height: 90vh;">
+			style="height: 95vh;">
 		      <el-menu-item index="/control_mng/cTravel_msg/cScenic_area">
 		        <i class="el-icon-s-flag"></i>
 		        <span slot="title">景区信息</span>
@@ -28,7 +28,7 @@
 			  </el-menu-item>
 		    </el-menu>	
 		  </el-aside>
-		  <el-main class="main">
+		  <el-main class="main"   style="height: 90vh">
 			  <router-view/>
 		  </el-main>
 		</el-container>
@@ -40,12 +40,14 @@
 	  name: 'cTravel_msg',
 	  data(){
 	    return{
+			
 	    }
 	  },
 	  methods: {
 	    handleSelect(key) {
 	      this.$router.push({
-	        path: key
+	        path: key,
+			
 	      })
 	    }
 	  }

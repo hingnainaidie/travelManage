@@ -1,20 +1,27 @@
 <template>
 	<div>
-		酒店信息
 		<div>
 			<h1>酒店信息</h1>
+			<div v-if="isLogin" class="class4">
+			    <el-alert
+					title="账号未登录"
+					type="warning"
+					description="请前往主页面登录"
+					show-icon>
+				</el-alert>
+			</div>
 			<div>
-				
 				<el-select v-model="place" slot="prepend" placeholder="请选择地区" >
 				    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label"></el-option>
 				</el-select>
-				<el-button slot="append" icon="el-icon-search" @click="search">搜索</el-button>
-				<div>
-					<el-table
-							
-					        :data="HotelList"
+				<el-button slot="append" style="margin-left: 1%;" icon="el-icon-search" @click="search">搜索</el-button>
+				<div  style="margin-top: 1%">
+					<el-table	
+					        :data="HotelList.slice((currentPage - 1) * pagesize, currentPage * pagesize)"
 					        stripe
-					        style="width: 100%">
+					        style="width: 100%"
+					        ref="recordTable"
+					        :height="tableHeight">
 					    <el-table-column
 								width="100px;"
 								align="center"
@@ -28,87 +35,170 @@
 					    </el-table-column>
 					    <el-table-column
 								align="center"
-					            prop="hotelAddress"
+					            prop="hotelLocation"
 					            label="酒店地址">
 					    </el-table-column>
 						<el-table-column
 								align="center"
 								show-overflow-tooltip
-						        prop="docSummary"
-						        label="酒店剩余房间">
+						        prop="hotelRemainingCapacity"
+						        label="酒店最大客容量">
 						</el-table-column>
-						
-						
+						<el-table-column
+								align="center"
+								show-overflow-tooltip
+						        prop="hotelMaxCapacity"
+						        label="酒店剩余客容量">
+						</el-table-column>
 					</el-table>
 				</div>
 			</div>
+			<template>
+			  <div class="block">
+			    <el-pagination
+			      @size-change="handleSizeChange"
+			      @current-change="handleCurrentChange"
+			      :current-page="currentPage"
+			      :page-sizes="[10,20,50,100]"
+			      :page-size="10"
+			      layout="total, sizes, prev, pager, next, jumper"
+			      :total="HotelList.length">
+			    </el-pagination>
+			  </div>
+			</template>
 		</div>
 	</div>
 </template>
 
 <script>
+	import { tGetHotelInfo } from '@/api/index.js';
+	import { sGetChoseHotelInfo } from '@/api/index.js';
 	export default {
-	  name: 'hotel_msg',
-	  data(){
-	    return{
-			HotelList: [],
-			value: '',
-			place: '',
-			options: [{
-				value: '选项1',
-				label: '两江新区',
+		name: 'hotel_msg',
+		data(){
+			return{
+				//--------------------检测是否登录-------------------------
+				isLogin:false,
+				//--------------------检测是否登录-------------------------
+				HotelList:[],
+				//-------------根据字段查询---------------
+				chosestr:'',//选中的地址字段
+				//-------------根据字段查询---------------
+				//-------------分页--------------------
+				currentPage: 1, //初始页
+				pagesize: 10, //    每页的数据
+				tableHeight: 450, //默认初始值
+				//-------------分页--------------------
+				value: '',
+				place: '',
+				options: [{
+					value: '选项1',
+					label: '两江新区',
+				},
+				{
+					value: '选项2',
+					label: '渝中区',
+				},
+				{
+					value: '选项3',
+					label: '渝北区',
+				},
+				{
+					value: '选项4',
+					label: '南岸区',
+				},
+				{
+					value: '选项5',
+					label: '沙坪坝区',
+				},
+				{
+					value: '选项6',
+					label: '查看所有',
+				}],
+				userInfo:localStorage.getItem('userInfo'),
+			}
+		},
+		methods:{
+			// 初始页currentPage、初始每页数据数pagesize和数据data
+			handleSizeChange (size) {
+				console.log(size,'size');
+				this.pagesize = size;
+				console.log(this.pagesize); //每页下拉显示数据
 			},
-			{
-				value: '选项2',
-				label: '渝中区',
+			handleCurrentChange (currentPage) {
+				console.log(currentPage,'currentPage');
+				this.currentPage = currentPage;
+				console.log(this.currentPage); //点击第几页
 			},
-			{
-				value: '选项3',
-				label: '渝北区',
+			//查看酒店信息
+			sHotelInfo(){
+				
+				if(!window.localStorage.userId){
+					console.log("未登录");
+					this.isLogin = true;
+					console.log(this.isLogin);
+				}
+				else{
+					this.isLogin = false;
+					tGetHotelInfo().then(res => {
+						if(res != -1){
+							this.HotelList = res.data.datas;
+							for(let i = 0; i < this.HotelList.length; i++)
+							{
+								this.HotelList[i].hotelId = i + 1;							
+							}
+						}
+					})
+				}
+				
 			},
-			{
-				value: '选项4',
-				label: '南岸区',
+			//根据字段搜索酒店信息
+			sChoseHotelInfo(){
+				let data = {
+					hotelLocation: this.chosestr
+				};
+				sGetChoseHotelInfo(data).then(res => {
+					if(res != -1){
+						this.HotelList = res.data.datas;
+						for(let i = 0; i < this.HotelList.length; i++)
+						{
+							this.HotelList[i].hotelId = i + 1;							
+						}
+					}
+				})
 			},
-			{
-				value: '选项5',
-				label: '沙坪坝区',
-			}],
-			
-	    }
-	  },
-	  methods:{
-		  initHotelList(){
-			  this.HotelList = [
-				  {
-					  hotelId:1,
-					  hotelName: "小黄杯酒店",
-					  hotelAddress: "重庆市沙坪坝区a酒店",
-					  docSummary: "10间房间可用",
-				  },
-				  {
-					  hotelId:2,
-					  hotelName: "小绿人酒店",
-					  hotelAddress: "重庆市渝北区区b酒店",
-					  docSummary: "30间房间可用",
-				  }
-			  ];
-		  			  
-		  },
-		  //搜索
-		  search(){
-			  console.log(this.place);
-		  }
-	  },
-	  mounted() {
-	  	this.$nextTick(() => {
-	  		//页面初始化的时候执行
-	  		this.initHotelList();
-	  		
-	  	})
-	  },
+			//搜索
+			search(){
+				this.chosestr = this.place;
+				this.chosestr = this.place;
+				if(this.chosestr == '查看所有'){
+					this.sHotelInfo();
+				}else{
+					this.sChoseHotelInfo();
+				}
+			}
+		},
+		mounted() {
+			this.$nextTick(() => {
+				//页面初始化的时候执行
+				this.sHotelInfo();
+				// 根据浏览器高度设置初始高度
+				this.tableHeight = window.innerHeight - this.$refs.recordTable.$el.offsetTop - 70
+				// 监听浏览器高度变化，改变表格高度
+				window.onresize = () =>{
+					this.tableHeight = window.innerHeight - this.$refs.recordTable.$el.offsetTop - 70
+				}
+			})
+		},
 	}
 </script>
 
 <style>
+	.block{
+		margin-top: 1.5%;
+		text-align: center;
+	}
+	.class4{
+		margin-bottom: 2%;
+	}
 </style>

@@ -14,10 +14,7 @@
 			    <i class="el-icon-video-camera-solid"></i>
 			    <span slot="title">景区监控信息</span>
 			  </el-menu-item>
-			  <el-menu-item index="/staff_mng/info_manage/police_info">
-			    <i class="el-icon-s-check"></i>
-			    <span slot="title">公安监控信息</span>
-			  </el-menu-item>
+			  
 		    </el-menu>	
 		  </el-aside>
 		  <el-main class="main">
@@ -32,12 +29,14 @@
 	  name: 'info_manage',
 	  data(){
 	    return{
+			userInfo: localStorage.getItem('userInfo'),
 	    }
 	  },
 	  methods: {
 	    handleSelect(key) {
 	      this.$router.push({
-	        path: key
+	        path: key,
+			query:{data:this.userInfo}
 	      })
 	    }
 	  }

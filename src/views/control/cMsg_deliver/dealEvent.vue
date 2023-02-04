@@ -1,22 +1,22 @@
 <template>
 	<div class="top">
-		<el-descriptions :title="tripEvent.trip_event_title" :column="2">
-			<el-descriptions-item label="地点">{{tripEvent.trip_event_location}}</el-descriptions-item>
-			<el-descriptions-item label="上传者">{{tripEvent.user_name}}</el-descriptions-item>
-			<el-descriptions-item label="时间">{{tripEvent.trip_event_time}}</el-descriptions-item>
+		<el-descriptions :title="tripEvent.tripEventTitle" :column="2">
+			<el-descriptions-item label="地点">{{tripEvent.tripEventLocation}}</el-descriptions-item>
+			<el-descriptions-item label="上传者">{{tripEvent.userName}}</el-descriptions-item>
+			<el-descriptions-item label="时间">{{tripEvent.tripEventTime}}</el-descriptions-item>
 			<el-descriptions-item label="类别">
-				<el-tag size="small">{{tripEvent.trip_event_classification}}</el-tag>
+				<el-tag size="small">{{tripEvent.tripEventClassification}}</el-tag>
 			</el-descriptions-item>
 		</el-descriptions>
 		<div style="color: gray;">
 			<div>旅游事件描述：</div>
-			<div style="margin-top: 10px;margin-bottom: 20px;">{{tripEvent.trip_event_description}}</div>
+			<div style="margin-top: 10px;margin-bottom: 20px;">{{tripEvent.tripEventDescription}}</div>
 		</div>
 		<div>
-			<div style="margin-bottom: 20px;">
+			<div style="margin-bottom: 10px;">
 				<el-row>
 					<el-col :span="8">
-						<el-select v-model="cate_value" placeholder="请选择">
+						<el-select v-model="cate_value" placeholder="请选择" @change='cateChange()'>
 							<el-option v-for="item in options" :key="item.value" :label="item.label"
 								:value="item.value">
 							</el-option>
@@ -27,35 +27,40 @@
 					</el-col>
 				</el-row>
 			</div>
-			<el-table border :data="emergencyList" height="250" highlight-current-row
+			<el-table border :data="emergencyList" height="200" highlight-current-row
 				@current-change="handleCurrentChange">
-				<el-table-column width="200px;" align="center" prop="emergency_time" label="预案时间"></el-table-column>
-				<el-table-column align="center" prop="emergency_name" label="预案名称"></el-table-column>
+				<el-table-column width="200px;" align="center" prop="emergencyTime" label="预案时间"></el-table-column>
+				<el-table-column align="center" prop="emergencyName" label="预案名称"></el-table-column>
 				<el-table-column label="操作" align="center" width="120">
 					<template slot-scope="scope">
-						<el-button size="mini" type="warning" @click="showEmergeDetail(scope.$index, scope.row)">详情</el-button>
+						<el-button size="mini" type="warning" @click="showEmergeDetail(scope.row.emergencyId)">详情</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
+			<div style="color: gray; margin-top:20px;">
+				<div style="margin: 10px;">预警信息编辑：</div>
+				<textarea class="input" v-model="emergencyMsg" placeholder="请输入预警信息"
+				  style="width:100%; min-height: 80px;"></textarea>
+			</div>
 			<div style="margin-top: 40px;">
 				<div style="float: left;">
 					<el-button type="warning" @click="wait()">取消</el-button>
 				</div>
 				<div style="float: right;">
-					<el-button type="primary">确定并发送预警信息</el-button>
+					<el-button type="primary" @click="sendEmergency()">确定并发送预警信息</el-button>
 				</div>
 			</div>
 			<!-- 预案详情查看 -->
 			<el-dialog title="预案详情" :visible.sync="isShowDetail" :center='true' width="800px">
 				<div>
 					<el-descriptions class="margin-top" :column="1">
-						<el-descriptions-item label="预案名称">{{emergeDetail.emergency_name}}</el-descriptions-item>
-						<el-descriptions-item label="预案时间">{{emergeDetail.emergency_time}}</el-descriptions-item>
+						<el-descriptions-item label="预案名称">{{emergeDetail.emergencyName}}</el-descriptions-item>
+						<el-descriptions-item label="预案时间">{{emergeDetail.emergencyTime}}</el-descriptions-item>
 						<el-descriptions-item label="预案类别">
-							<el-tag size="small">{{emergeDetail.emergency_classification}}1</el-tag>
+							<el-tag size="small">{{emergeDetail.emergencyClassification}}</el-tag>
 						</el-descriptions-item>
-						<el-descriptions-item label="预案描述">{{emergeDetail.emergency_description}}</el-descriptions-item>
-						<el-descriptions-item label="解决方法">{{emergeDetail.emergency_solution}}</el-descriptions-item>
+						<el-descriptions-item label="预案描述">{{emergeDetail.emergencyDescription}}</el-descriptions-item>
+						<el-descriptions-item label="解决方法">{{emergeDetail.emergencySolution}}</el-descriptions-item>
 					</el-descriptions>
 			
 				</div>
@@ -72,23 +77,20 @@
 		name: "dealEvent",
 		data() {
 			return {
+				emergencyMsg:'',
+				tripId:this.$route.query.data,
 				isShowDetail:false,
 				choosePre: "",
-				tripEvent: {
-					trip_event_time: "2022-11-11 12:11:10",
-					trip_event_title: "xxx旅游事件",
-					trip_event_location: "重庆市沙坪坝区景阳花园",
-					trip_event_classification: "类别一",
-					user_name: "时影",
-					trip_event_description: "查看信息查看高级景区信息：舒适度、景区基本信息、票务销售信息、离区入区情况，查看停车场信息：对应停车场的剩余容量、位置查看酒店信息：对应酒店的剩余容量、位置查看游客信息：表"
-				},
-				cate_value: "事故灾害",
+				chooseId:"",
+				chooseMsg:"",
+				tripEvent: {},
+				cate_value: "自然灾害",
 				options: [{
 					value: "自然灾害",
 					label: "自然灾害"
 				}, {
-					value: "事故灾害",
-					label: "事故灾害"
+					value: "事故灾难",
+					label: "事故灾难"
 				}, {
 					value: "公共卫生事件",
 					label: "公共卫生事件"
@@ -99,61 +101,63 @@
 					value: "经营突发事件",
 					label: "经营突发事件"
 				}],
-				emergencyList: [{
-						emergency_time: '2022-08-23 14:34:12',
-						emergency_name: '蛇来了',
-						emergency_classification: '事故灾害'
-
-					},
-					{
-						emergency_time: '2021-07-14 15:34:00',
-						emergency_name: '设施损坏',
-						emergency_classification: '事故灾害'
-
-					},
-					{
-						emergency_time: '2022-06-29 09:44:12',
-						emergency_name: '地震',
-						emergency_classification: '事故灾害'
-
-					},
-					{
-						emergency_time: '2021-07-14 15:34:00',
-						emergency_name: '设施损坏',
-						emergency_classification: '事故灾害'
-
-					},
-					{
-						emergency_time: '2022-06-29 09:44:12',
-						emergency_name: '地震',
-						emergency_classification: '事故灾害'
-
-					}
-				],
+				emergencyList: [],
 				//预案详情（接收后端传回的数据）
-				emergeDetail: {
-					emergency_time: '1231432',
-					emergency_name: 'xxxxxxx',
-					emergency_classification: '类型1',
-					emergency_description: '这是描述',
-					emergency_solution: '这是解决方法'
-				}
+				emergeDetail: {}
 
 			}
 		},
 		methods: {
 			handleCurrentChange(val) {
-				this.choosePre = val.emergency_name;
+				this.choosePre = val.emergencyName;
+				this.chooseId = val.emergencyId;
+				this.chooseMsg=val.emergencySolution;
 			},
-			wait() {
-				this.$router.push({
-					path: "/control_mng/cMsg_deliver/cInstruct"
+			showEmergeDetail(item) {
+				this.isShowDetail = true;
+				this.instance.emergeDetail({
+					emergencyId:item
+				}).then(res =>{
+					this.emergeDetail=res.data.datas;
 				})
 			},
-			showEmergeDetail(index,item) {
-				this.isShowDetail = true;
-				console.log(index);
+			cateChange(){
+				this.instance.showEmergesByType({
+				   emergencyClassification:this.cate_value
+				 }).then(res => {
+					 this.emergencyList=res.data.datas;
+				 })
 			},
+			sendEmergency(){
+				if(this.emergencyMsg==""){
+					alert("请输入预警信息");
+				}else if(this.choosePre==""){
+					alert("请选择预案！")
+				}else{
+					//确定并发送预警信息
+					this.instance.saveEmergency({
+					   tripEventId:this.tripId,
+					   staffWarningInformation:this.emergencyMsg,
+						emergencyId:this.chooseId,
+						guidanceInstructionInfo:this.chooseMsg
+					 }).then(res => {
+						 this.$router.back();
+					 })
+				}
+			},
+			wait(){
+				this.$router.back();
+			}
+		},
+		mounted(){
+			this.cateChange();
+			this.instance.getDetailChecked({
+				tripEventId:this.tripId
+			}).then(res=>{
+				this.tripEvent=res.data.datas;
+				this.emergencyMsg="时间"+this.tripEvent.tripEventTime+","+"在"+this.tripEvent.tripEventLocation
+									+"发生了"+this.tripEvent.tripEventTitle+"。"+"请在游客们提高警惕，保护人身安全";
+			});
 		}
 	}
 </script>
@@ -162,5 +166,16 @@
 	.top {
 		margin: auto;
 		width: 800px;
+	}
+	.input {
+	  width: 100%;
+	  border: 2px solid #545c64;
+	  border-radius: 10px;
+	  /*css3属性IE不支持*/
+	}
+	
+	.input:focus {
+	  border-color: #ffd04b;
+	  outline: 0;
 	}
 </style>
